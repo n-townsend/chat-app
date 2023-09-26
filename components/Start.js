@@ -1,5 +1,9 @@
 import { useState } from 'react';
+
+// Firebase Import
 import { getAuth, signInAnonymously } from "firebase/auth";
+
+// React-Native Import
 import {
   StyleSheet,
   View,
