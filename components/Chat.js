@@ -2,16 +2,25 @@ import { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
-  Text,
   KeyboardAvoidingView,
   Platform,
   Alert
 } from 'react-native';
-import { Bubble, GiftedChat } from "react-native-gifted-chat";
-import { onSnapshot, collection, orderBy, query, addDoc } from "firebase/firestore";
+import { GiftedChat, Bubble, InputToolbar } from "react-native-gifted-chat";
+import {
+  onSnapshot,
+  collection,
+  orderBy,
+  query,
+  addDoc
+} from "firebase/firestore";
 
-const Chat = ({ route, navigation, db }) => {
+// import react AsyncStorage
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const Chat = ({ route, navigation, db, isConnected, }) => {
   const { name, color, userID } = route.params;
+
   //create messages state
   const [messages, setMessages] = useState([]);
 
@@ -32,28 +41,50 @@ const Chat = ({ route, navigation, db }) => {
 
   //Add name to Navigation Screen
   useEffect(() => {
-    navigation.setOptions({ title: name });
-    const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
-    const unsubMessages = onSnapshot(q, (docs) => {
-      let newMessages = [];
-      docs.forEach(doc => {
-        newMessages.push({
-          id: doc.id,
-          ...doc.data(),
-          createdAt: new Date(doc.data().createdAt.toMillis())
-        })
-      })
-      setMessages(newMessages);
-    })
+    if (isConnected === true) {
+      // avoid registering multiple listeners when useEffect is re-executed by unregistering current 
+      // onSnapshot listener.
+      if (unsubMessages) unsubMessages();
+      unsubMessages = null;
+      unsubMessages = onSnapshot(
+        query(collection(db, 'messages'), orderBy('createdAt', 'desc')),
+        (documentsSnapshot) => {
+          let newMessages = [];
+          documentsSnapshot.forEach((doc) => {
+            // shape the messages to match what gifted chat expects
+            newMessages.push({
+              id: doc.id,
+              ...doc.data(),
+              createdAt: new Date(doc.data().createdAt.toMillis()),
+            });
+          });
+          cacheMessages(newMessages);
+          setMessages(newMessages);
+        }
+      );
+    } else loadCachedMessages();
+
     return () => {
       if (unsubMessages) unsubMessages();
-    }
-  }, []);
+    };
+  }, [isConnected]);
 
-  // Append new message to firestore
-  const onSend = (newMessages) => {
-    addDoc(collection(db, "messages"), newMessages[0]);
+  const cacheMessages = async (messagesToCache) => {
+    try {
+      await AsyncStorage.setItem('messages', JSON.stringify(messagesToCache));
+    } catch (error) {
+      console.log(error.message);
+    }
   };
+
+  const loadCachedMessages = async () => {
+    const cachedMessages = (await AsyncStorage.getItem('messages')) || [];
+    setMessages(JSON.parse(cachedMessages));
+  };
+
+  useEffect(() => {
+    navigation.setOptions({ title: name });
+  }, []);
 
   // Alter the Gifted Chat default Bubble, ...props inherits props and is then given new wrapper style.
   const renderBubble = (props) => {
@@ -70,6 +101,14 @@ const Chat = ({ route, navigation, db }) => {
     />
   }
 
+  const renderInputToolbar = (props) => {
+    if (isConnected) {
+      return <InputToolbar {...props} />;
+    } else {
+      return null;
+    }
+  };
+
   return (
     <View style={[styles.container, { backgroundColor: color }]}>
       <GiftedChat
@@ -80,6 +119,7 @@ const Chat = ({ route, navigation, db }) => {
           _id: userID,
           name: name,
         }}
+        renderInputToolbar={renderInputToolbar}
       />
       {/*Checks the type of platform and if it is Android the Keyboard view will be
         adjusted to ensure the entered text is shown.*/}
