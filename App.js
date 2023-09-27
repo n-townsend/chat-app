@@ -1,20 +1,24 @@
-//import the two screens
+// import the two screens
 import Start from './components/Start';
 import Chat from './components/Chat';
 
-// import react Navigation
+// import react components
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useNetInfo } from '@react-native-community/netinfo';
+import { useEffect } from "react";
+import { Alert } from "react-native";
 
 // Create the navigator
 const Stack = createNativeStackNavigator();
 
 // import Firebase
 import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore, disableNetwork, enableNetwork } from "firebase/firestore";
 
 const App = () => {
-  // Your web app's Firebase configuration
+  const connectionStatus = useNetInfo();
+  // web app's Firebase configuration
   const firebaseConfig = {
     apiKey: "AIzaSyBp52GP1b8cYZ_tgStpJdKYACbB0M-B5KQ",
     authDomain: "chat-with-me-ac021.firebaseapp.com",
@@ -30,6 +34,16 @@ const App = () => {
   // initialize Cloud Firestore
   const db = getFirestore(app);
 
+  // check internet connection and alert if offline
+  useEffect(() => {
+    if (connectionStatus.isConnected === false) {
+      Alert.alert("Connection Lost!");
+      disableNetwork(db);
+    } else if (connectionStatus.isConnected === true) {
+      enableNetwork(db);
+    }
+  }, [connectionStatus.isConnected]);
+
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Start">
@@ -37,6 +51,7 @@ const App = () => {
         <Stack.Screen name="Chat">
           {(props) => (
             <Chat
+              isConnected={connectionStatus.isConnected}
               db={db}
               {...props}
             />
