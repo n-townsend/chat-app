@@ -15,6 +15,7 @@ const Stack = createNativeStackNavigator();
 // import Firebase
 import { initializeApp } from 'firebase/app';
 import { getFirestore, disableNetwork, enableNetwork } from "firebase/firestore";
+import { getStorage } from 'firebase/storage';
 
 const App = () => {
   const connectionStatus = useNetInfo();
@@ -33,6 +34,7 @@ const App = () => {
 
   // initialize Cloud Firestore
   const db = getFirestore(app);
+  const storage = getStorage(app);
 
   // check internet connection and alert if offline
   useEffect(() => {
@@ -53,6 +55,7 @@ const App = () => {
             <Chat
               isConnected={connectionStatus.isConnected}
               db={db}
+              storage={storage}
               {...props}
             />
           )}

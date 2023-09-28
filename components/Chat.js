@@ -1,3 +1,4 @@
+import CustomActions from './CustomActions';
 import { useState, useEffect } from "react";
 import {
   StyleSheet,
@@ -6,6 +7,7 @@ import {
   Platform,
   Alert
 } from 'react-native';
+import MapView from 'react-native-maps';
 import { GiftedChat, Bubble, InputToolbar } from "react-native-gifted-chat";
 import {
   onSnapshot,
@@ -18,7 +20,7 @@ import {
 // import react AsyncStorage
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const Chat = ({ route, navigation, db, isConnected, }) => {
+const Chat = ({ route, navigation, db, isConnected, storage }) => {
   const { name, color, userID } = route.params;
 
   //create messages state
@@ -109,6 +111,34 @@ const Chat = ({ route, navigation, db, isConnected, }) => {
     }
   };
 
+  const renderCustomActions = (props) => {
+    return <CustomActions storage={storage} userID={userID} {...props} />;
+  };
+
+  // Render map view if the action holds a location
+  const renderCustomView = (props) => {
+    const { currentMessage } = props;
+    if (currentMessage.location) {
+      return (
+        <MapView
+          style={{
+            width: 150,
+            height: 100,
+            borderRadius: 13,
+            margin: 3,
+          }}
+          region={{
+            latitude: currentMessage.location.latitude,
+            longitude: currentMessage.location.longitude,
+            latitudeDelta: 0.0933,
+            longitudeDelta: 0.0431,
+          }}
+        />
+      );
+    }
+    return null;
+  };
+
   return (
     <View style={[styles.container, { backgroundColor: color }]}>
       <GiftedChat
@@ -119,6 +149,8 @@ const Chat = ({ route, navigation, db, isConnected, }) => {
           _id: userID,
           name: name,
         }}
+        renderActions={renderCustomActions}
+        renderCustomView={renderCustomView}
         renderInputToolbar={renderInputToolbar}
       />
       {/*Checks the type of platform and if it is Android the Keyboard view will be
