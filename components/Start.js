@@ -90,7 +90,7 @@ const Start = ({ navigation }) => {
               onPress={() => setColor(backgroundColors.d)}>
             </TouchableOpacity>
           </View>
-          <View style={styles.btnContainer}>
+          <View>
             <TouchableOpacity style={[styles.button, { backgroundColor: color }]} onPress={signInUser}>
               <Text>Start chatting</Text>
             </TouchableOpacity>
@@ -150,20 +150,15 @@ const styles = StyleSheet.create({
     height: 50,
     width: 50,
     borderRadius: 25,
-    marginTop: 10,
-    marginBottom: 10,
+    margin: 5,
   },
   selectedCircle: {
     borderWidth: 2,
     borderColor: '#FFFFFF',
   },
-  btnContainer: {
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
   button: {
-    width: '88%',
-    justifyContent: 'center',
+    width: '100%',
+    justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: 20,
     padding: 15,
