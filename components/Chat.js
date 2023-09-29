@@ -1,4 +1,7 @@
+// Import Custom Actions 
 import CustomActions from './CustomActions';
+
+// Import React Components
 import { useState, useEffect } from "react";
 import {
   StyleSheet,
@@ -9,6 +12,11 @@ import {
 } from 'react-native';
 import MapView from 'react-native-maps';
 import { GiftedChat, Bubble, InputToolbar } from "react-native-gifted-chat";
+
+// import react AsyncStorage
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+// Import Firebase Components
 import {
   onSnapshot,
   collection,
@@ -17,16 +25,13 @@ import {
   addDoc
 } from "firebase/firestore";
 
-// import react AsyncStorage
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
 const Chat = ({ route, navigation, db, isConnected, storage }) => {
   const { name, color, userID } = route.params;
 
-  //create messages state
+  // Create Messages State
   const [messages, setMessages] = useState([]);
 
-  //call onSend function addMessage
+  // Call onSend function addMessage
   const addMessage = async (newMessages) => {
     const newMessageRef = await addDoc(
       collection(db, 'messages'),
@@ -41,10 +46,10 @@ const Chat = ({ route, navigation, db, isConnected, storage }) => {
 
   let unsubMessages;
 
-  //Add name to Navigation Screen
+  // Check for online status
   useEffect(() => {
     if (isConnected === true) {
-      // avoid registering multiple listeners when useEffect is re-executed by unregistering current 
+      // Avoid registering multiple listeners when useEffect is re-executed by unregistering current 
       // onSnapshot listener.
       if (unsubMessages) unsubMessages();
       unsubMessages = null;
@@ -53,7 +58,7 @@ const Chat = ({ route, navigation, db, isConnected, storage }) => {
         (documentsSnapshot) => {
           let newMessages = [];
           documentsSnapshot.forEach((doc) => {
-            // shape the messages to match what gifted chat expects
+            // Shape the messages to match what gifted chat expects
             newMessages.push({
               id: doc.id,
               ...doc.data(),
@@ -88,7 +93,7 @@ const Chat = ({ route, navigation, db, isConnected, storage }) => {
     navigation.setOptions({ title: name });
   }, []);
 
-  // Alter the Gifted Chat default Bubble, ...props inherits props and is then given new wrapper style.
+  // Alter the Gifted Chat default Bubble, ...props inherits current props and is then given new wrapper style.
   const renderBubble = (props) => {
     return <Bubble
       {...props}
