@@ -1,12 +1,7 @@
-// Import Expo Components
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
-
-// Import React Components
 import { View, StyleSheet, Text, TouchableOpacity, Alert } from 'react-native';
 import { useActionSheet } from '@expo/react-native-action-sheet';
-
-// Import Firebase Components
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
 const CustomActions = ({
@@ -62,8 +57,6 @@ const CustomActions = ({
     });
   };
 
-  // Gets the users media permissions and if granted, will open the library and pass the
-  // img URI to `sendAndUploadImage`
   const pickImage = async () => {
     let permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
@@ -74,8 +67,6 @@ const CustomActions = ({
     } else Alert.alert("Permissions haven't been granted.");
   };
 
-  // Gets the users camera permissions and if granted, will open the camera and pass the
-  // img URI to `sendAndUploadImage`
   const takePicture = async () => {
     let permission = await ImagePicker.requestCameraPermissionsAsync();
 
@@ -86,7 +77,6 @@ const CustomActions = ({
     } else Alert.alert("Permissions haven't been granted.");
   };
 
-  // Gets the users location permissions and if granted, will get the users current location and send it
   const getLocation = async () => {
     let permission = await Location.requestForegroundPermissionsAsync();
 
@@ -120,7 +110,7 @@ const CustomActions = ({
       accessibilityRole="button"
     >
       <View style={[styles.wrapper, wrapperStyle]}>
-        <Text style={[styles.iconText, iconTextStyle]}></Text>
+        <Text style={[styles.iconText, iconTextStyle]}>+</Text>
       </View>
     </TouchableOpacity>
   );
@@ -142,7 +132,7 @@ const styles = StyleSheet.create({
   iconText: {
     color: '#b2b2b2',
     fontWeight: 'bold',
-    fontSize: 10,
+    fontSize: 16,
     backgroundColor: 'transparent',
     textAlign: 'center',
   },
