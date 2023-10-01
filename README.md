@@ -4,7 +4,7 @@
 
 Chat App is a mobile application built using React Native that provides a seamless chatting experience. It offers real-time messaging, multimedia and location sharing features.
 
-<img src="/media/images/start_screen.png" alt="Screenshot of the Start Screen" width="200">
+<img src="/media/images/start_screen.jpg" alt="Screenshot of the Start Screen" width="200">
 <img src="/media/images/chat_screen_1.png" alt="Screenshot of the Chat Screen" width="200">
 <img src="/media/images/chat_screen_2.png" alt="Another Screenshot of the Chat Screen" width="200">
 
