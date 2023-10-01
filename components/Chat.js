@@ -1,7 +1,4 @@
-// Import Custom Actions 
 import CustomActions from './CustomActions';
-
-// Import React Components
 import { useState, useEffect } from "react";
 import {
   StyleSheet,
@@ -12,11 +9,7 @@ import {
 } from 'react-native';
 import MapView from 'react-native-maps';
 import { GiftedChat, Bubble, InputToolbar } from "react-native-gifted-chat";
-
-// import react AsyncStorage
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-// Import Firebase Components
 import {
   onSnapshot,
   collection,
@@ -30,15 +23,12 @@ const Chat = ({ route, navigation, db, isConnected, storage }) => {
 
   // Create Messages State
   const [messages, setMessages] = useState([]);
-
-  // Call onSend function addMessage
   const addMessage = async (newMessages) => {
     const newMessageRef = await addDoc(
       collection(db, 'messages'),
       newMessages[0]
     );
 
-    //if new message fails to add
     if (!newMessageRef.id) {
       Alert.alert('Unable to add message. Try again later');
     }

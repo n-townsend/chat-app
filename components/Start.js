@@ -1,9 +1,5 @@
 import { useState } from 'react';
-
-// Firebase Import
 import { getAuth, signInAnonymously } from "firebase/auth";
-
-// React-Native Import
 import {
   StyleSheet,
   View,
@@ -18,12 +14,12 @@ import {
 
 const image = require('../media/images/background-image.png');
 
-// Set Background Color Options
+
 const backgroundColors = {
-  a: '#474056',
-  b: '#757083',
-  c: '#8A95A5',
-  d: '#B9C6AE',
+  Fuchsia: '#FF77FF',
+  Nardo: '#686A6C',
+  Azure: '#4863A0',
+  Seafoam: '#3EA99F',
 };
 
 const Start = ({ navigation }) => {
@@ -31,7 +27,6 @@ const Start = ({ navigation }) => {
   const [name, setName] = useState('');
   const [color, setColor] = useState(backgroundColors);
 
-  // Function to sign in the user anonymously
   const signInUser = () => {
     signInAnonymously(auth)
       .then((result) => {
@@ -60,34 +55,34 @@ const Start = ({ navigation }) => {
             <TouchableOpacity
               style={[
                 styles.circle,
-                color === backgroundColors.a && styles.selectedCircle,
-                { backgroundColor: backgroundColors.a },
+                color === backgroundColors.Fuchsia && styles.selectedCircle,
+                { backgroundColor: backgroundColors.Fuchsia },
               ]}
-              onPress={() => setColor(backgroundColors.a)}>
+              onPress={() => setColor(backgroundColors.Fuchsia)}>
             </TouchableOpacity>
             <TouchableOpacity
               style={[
                 styles.circle,
-                color === backgroundColors.b && styles.selectedCircle,
-                { backgroundColor: backgroundColors.b },
+                color === backgroundColors.Nardo && styles.selectedCircle,
+                { backgroundColor: backgroundColors.Nardo },
               ]}
-              onPress={() => setColor(backgroundColors.b)}>
+              onPress={() => setColor(backgroundColors.Nardo)}>
             </TouchableOpacity>
             <TouchableOpacity
               style={[
                 styles.circle,
-                color === backgroundColors.c && styles.selectedCircle,
-                { backgroundColor: backgroundColors.c },
+                color === backgroundColors.Azure && styles.selectedCircle,
+                { backgroundColor: backgroundColors.Azure },
               ]}
-              onPress={() => setColor(backgroundColors.c)}>
+              onPress={() => setColor(backgroundColors.Azure)}>
             </TouchableOpacity>
             <TouchableOpacity
               style={[
                 styles.circle,
-                color === backgroundColors.d && styles.selectedCircle,
-                { backgroundColor: backgroundColors.d },
+                color === backgroundColors.Seafoam && styles.selectedCircle,
+                { backgroundColor: backgroundColors.Seafoam },
               ]}
-              onPress={() => setColor(backgroundColors.d)}>
+              onPress={() => setColor(backgroundColors.Seafoam)}>
             </TouchableOpacity>
           </View>
           <View>
